@@ -173,7 +173,7 @@ Resources:
   InstanceRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: MailInABoxInstanceRole
+      RoleName: !Sub MailInABoxInstanceRole-${AWS::StackName}
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -253,7 +253,7 @@ Resources:
   InstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties: 
-      InstanceProfileName: MailInABoxInstanceProfile
+      InstanceProfileName: !Sub MailInABoxInstanceProfile-${AWS::StackName}
       Roles: 
        - !Ref InstanceRole
 
