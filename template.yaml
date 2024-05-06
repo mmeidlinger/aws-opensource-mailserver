@@ -335,6 +335,8 @@ Resources:
           else
             export PUBLIC_IP="${InstanceEIP}"
           fi
+          echo "127.0.0.1 $PRIMARY_HOSTNAME" >> /etc/hosts
+
           # Setup Admin Account.
           export EMAIL_ADDR="admin@${MailInABoxDomain}"
           # If no admin password is specified generate a random one. In that case, we upload this randomly genereated PW to SSM if it's a fresh install
