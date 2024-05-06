@@ -30,6 +30,10 @@ Parameters:
     Description: Managed AMI ID for EC2 Instance
     Type : AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
     Default: '/aws/service/canonical/ubuntu/server/jammy/stable/current/amd64/hvm/ebs-gp2/ami-id'
+  InstanceVolumeSize:
+    Description: Size of Instance root volume in GB
+    Type : String
+    Default: 10
   InstanceDns:
     Description: DNS name of Instance (within the 'MailInABoxDomain') 
     Type: String
@@ -279,8 +283,8 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
-            VolumeType: gp2
-            VolumeSize: 8
+            VolumeType: gp3
+            VolumeSize: !Ref InstanceVolumeSize
             DeleteOnTermination: true
             Encrypted: true
       Tags:
