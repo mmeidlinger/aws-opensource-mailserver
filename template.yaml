@@ -306,9 +306,9 @@ Resources:
             unzip \
             intltool \
             python-is-python3
-          pip3 install duplicity==1.0.1
-          # snap install duplicity --classic
-          # ln -s /snap/bin/duplicity /usr/bin/duplicity
+
+          # Install duplicity via snap
+          snap install duplicity --classic && ln -s /snap/bin/duplicity /usr/local/sbin/
 
           # Install awscli and CloudFormation helper scripts
           cd /tmp
@@ -395,6 +395,8 @@ Resources:
           cd /opt/mailinabox/ && setup/start.sh
 
           # ---------------- POST INSTALL
+          # Get rid of duplicity installed by MIAB
+          apt-get remove -o DPkg::Lock::Timeout=120 -y duplicity && ln -s /snap/bin/duplicity /usr/bin/
           # Configure networking according to https://aws.amazon.com/premiumsupport/knowledge-center/ec2-static-dns-ubuntu-debian/
           INTERFACE=$(ip route list | grep default | grep -E  'dev (\w+)' -o | awk '{print $2}')
           cat <<EOT > /etc/netplan/99-custom-dns.yaml
