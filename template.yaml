@@ -397,8 +397,13 @@ Resources:
           cd /opt/mailinabox/ && setup/start.sh
 
           # ---------------- POST INSTALL
-          # Get rid of duplicity installed by MIAB
-          apt-get remove -o DPkg::Lock::Timeout=120 -y duplicity && ln -s /snap/bin/duplicity /usr/bin/
+          # Get rid of duplicity installed by MIAB, and keep it from coming back: setup/management.sh runs
+          # `apt_install duplicity` on every (re-)run, which would overwrite the snap link below with Ubuntu's
+          # duplicity 0.8.21. That version cannot do S3 backups here ("No module named 'boto'"). The diversion
+          # makes dpkg unpack the package's file to /usr/bin/duplicity.distrib instead.
+          apt-get remove -o DPkg::Lock::Timeout=120 -y duplicity
+          dpkg-divert --local --add /usr/bin/duplicity
+          ln -sf /snap/bin/duplicity /usr/bin/duplicity
           # Configure networking according to https://aws.amazon.com/premiumsupport/knowledge-center/ec2-static-dns-ubuntu-debian/
           INTERFACE=$(ip route list | grep default | grep -E  'dev (\w+)' -o | awk '{print $2}')
           cat <<EOT > /etc/netplan/99-custom-dns.yaml
